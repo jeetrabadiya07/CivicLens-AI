@@ -39,11 +39,12 @@ services:
       - key: MAX_CANDIDATE_DISTANCE_METERS
         value: 500.0
 
-staticSites:
-  - name: civiclens-web
+  - type: web
+    name: civiclens-web
+    runtime: static
     rootDir: frontend
     buildCommand: npm install && npm run build
-    publishDir: dist
+    staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
         value: https://civiclens-api.onrender.com
