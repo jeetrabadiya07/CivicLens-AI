@@ -1,0 +1,49 @@
+services:
+  - type: web
+    name: civiclens-api
+    env: python
+    rootDir: backend
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PROJECT_NAME
+        value: CivicLens AI
+      - key: ENV
+        value: production
+      - key: DEBUG
+        value: false
+      - key: DATABASE_URL
+        value: sqlite:///./civiclens.db
+      - key: ADMIN_API_KEY
+        generateValue: true
+      - key: SECRET_KEY
+        generateValue: true
+      - key: MODEL_NAME
+        value: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+      - key: EMBEDDING_DIM
+        value: 384
+      - key: TEXT_WEIGHT
+        value: 0.60
+      - key: LOCATION_WEIGHT
+        value: 0.30
+      - key: CATEGORY_WEIGHT
+        value: 0.10
+      - key: STRONG_MATCH_THRESHOLD
+        value: 0.72
+      - key: POSSIBLE_MATCH_THRESHOLD
+        value: 0.50
+      - key: DISTANCE_SIGMA_METERS
+        value: 75.0
+      - key: MAX_CANDIDATE_DISTANCE_METERS
+        value: 500.0
+
+staticSites:
+  - name: civiclens-web
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    publishDir: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://civiclens-api.onrender.com
